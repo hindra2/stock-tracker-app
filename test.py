@@ -11,8 +11,14 @@ class Window(ctk.CTk):
         self.initUI()
 
     def initUI(self):
-        self.label = ctk.CTkLabel(master=self.frame, text="Hello World", fg_color=("white", "gray38"), corner_radius=6)
-        self.label.grid(row=0, column=0)
+        self.combobox_1 = ctk.CTkComboBox(master=self.frame, values=["Close", "Open", "High", "Low"])
+        self.combobox_1.pack()
+
+        self.button = ctk.CTkButton(master=self.frame, text="CLICK TO GET", command=self.getComboBoxValue)
+        self.button.pack()
+
+    def getComboBoxValue(self):
+        print(self.combobox_1.get())
 
 
 class Main(ctk.CTk):
