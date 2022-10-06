@@ -1,52 +1,30 @@
-from sys import _xoptions
+import customtkinter as ctk
 import tkinter as tk
 
-class Toolbar(tk.Frame):
-    def __init__(self, parent):
-        self.parent = parent
-        self.frame = tk.Frame(self.parent, bg="blue")
+ctk.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+ctk.set_default_color_theme("dark-blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+class Window(ctk.CTk):
+    def __init__(self, frame):
+        super(). __init__()
+        self.frame = frame
         self.initUI()
-    
+
     def initUI(self):
-        self.insert_thing = tk.Button(self.frame, text="Insert Thing", command=self.doNothing)
-        self.insert_thing.grid(row=0, column=0)
-        
-        self.print_thing = tk.Button(self.frame, text="Print Thing", command=self.doNothing)
-        self.print_thing.grid(row=1, column=0)
+        self.label = ctk.CTkLabel(master=self.frame, text="Hello World", fg_color=("white", "gray38"), corner_radius=6)
+        self.label.grid(row=0, column=0)
 
-        self.frame.grid(row=0, column=0)
-        
-    def doNothing(self):
-        print("ASD")
 
-class Window(tk.Frame):
-    def __init__(self, parent):
-        self.parent = parent
-        self.frame = tk.Frame(self.parent)
+class Main(ctk.CTk):
+    def __init__(self):
+        super(). __init__()
 
         self.initUI()
 
     def initUI(self):
-        self.label = tk.Label(text="Hello World")
-        self.label.grid(row=0, column=1)
+        self.mainWindow = Window(self)
 
-class Main(tk.Frame):
-    def __init__(self, parent):
-        self.parent = parent
-        self.frame = tk.Frame(self.parent)
-
-        self.initUI()
-
-    def initUI(self):
-        self.toolbar = Toolbar(self.parent)
-        self.mainWindow = Window(self.parent)
-
-
-def main():
-    window = tk.Tk()
-    Main(window)
-    window.mainloop()
 
 if __name__ == "__main__":
-    main()
+    app = Main()
+    app.mainloop()

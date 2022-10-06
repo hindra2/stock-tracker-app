@@ -1,13 +1,15 @@
+from calendar import c
 import tkinter as tk
-import customtkinter as ctk
+from numpy import column_stack
 from stock import Stock
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 
 # Dropdown Menu Class
-class DropDown(ctk.CTk):
-    def __init__(self):
-        self.frame = tk.Frame(self)
+class DropDown(tk.Frame):
+    def __init__(self, parent):
+        self.parent = parent
+        self.frame = tk.Frame(self.parent)
 
         self.initUI()
     
@@ -43,9 +45,10 @@ class DropDown(ctk.CTk):
 #     pass
 
 
-class Toolbar(ctk.CTk):
-    def __init__(self):
-        self.frame = tk.Frame(self, bg="blue")
+class Toolbar(tk.Frame):
+    def __init__(self, parent):
+        self.parent = parent
+        self.frame = tk.Frame(self.parent, bg="blue")
 
         self.initUI()
     
@@ -63,9 +66,10 @@ class Toolbar(ctk.CTk):
 
 
 
-class MainWindow(ctk.CTk):
-    def __init__(self):
-        self.frame = tk.Frame(self)
+class MainWindow(tk.Frame):
+    def __init__(self, parent):
+        self.parent = parent
+        self.frame = tk.Frame(self.parent)
         self.initUI()
         self.frame.grid(column=1, row=0)
 
@@ -122,25 +126,26 @@ class MainWindow(ctk.CTk):
     def closeWindows(self):
         self.parent.destroy()
 
-class MainApp(ctk.CTk):
-    def __init__(self):
-        self.frame = tk.Frame(self)
-        self.parent.geometry("1920x1080")
-        self.parent.title("StockAppIA")
-        self.protocol("WM_DELETE_WINDOW", self.onClosing)  # call .on_closing() when app gets closed
+class MainApp(tk.Frame):
+    def __init__(self, parent, title, geometry):
+        self.parent = parent
+        self.frame = tk.Frame(self.parent)
+        self.parent.geometry(geometry)
+        self.parent.title(title)
+
         self.initUI()
 
     def initUI(self):
         # self.statusbar = Statusbar(self.parent)
         # self.navbar = Navbar(self.parent)
-        self.toolbar = Toolbar()
-        self.dropdown = DropDown()
-        self.main = MainWindow()
-    
-    def onClosing(self, event=0):
-        self.destroy()
+        self.toolbar = Toolbar(self.parent)
+        self.dropdown = DropDown(self.parent)
+        self.main = MainWindow(self.parent)
 
+def main():
+    window = tk.Tk()
+    MainApp(window, "StockAppIA", "1920x1080")
+    window.mainloop()
 
 if __name__ == "__main__":
-    app = MainApp()
-    app.mainloop()
+    main()
