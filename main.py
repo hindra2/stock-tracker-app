@@ -3,7 +3,11 @@ import customtkinter as ctk
 from stock import Stock
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
-ui_path = "/home/harold/Documents/Coding/Compsci IA/compsci-ia/assets/icons/"
+# Linux
+# ui_path = "/home/harold/Documents/Coding/Compsci IA/compsci-ia/assets/icons/"
+
+# Windows
+ui_path = "./assets/icons/"
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("dark-blue")
@@ -20,6 +24,7 @@ class Toolbar(ctk.CTk):
     def __init__(self, frame):
         super(). __init__()
         self.frame = frame
+        self.frame.rowconfigure(1, weight=1)
 
         self.initImage()
         self.initUI()
@@ -33,48 +38,65 @@ class Toolbar(ctk.CTk):
         self.home_button = ctk.CTkButton(master=self.frame, 
                                         text="", 
                                         image=self.home, 
-                                        fg_color=("white", "grey"),  
+                                        fg_color="white",  
                                         width=60, 
                                         corner_radius=6,
                                         command=self.doNothing)
-        self.home_button.grid(row=0, column=0, padx=5, pady=5)
+        self.home_button.grid(row=0, column=0, padx=5, pady=5, sticky="w")
         
         self.globe_button = ctk.CTkButton(master=self.frame, 
                                         text="", 
                                         image=self.globe, 
-                                        fg_color=("white", "grey"), 
+                                        fg_color="white", 
                                         width=60, 
                                         corner_radius=6,
                                         command=self.doNothing)
-        self.globe_button.grid(row=1, column=0, padx=5, pady=5)
+        self.globe_button.grid(row=1, column=0, padx=5, pady=5, sticky="n")
 
         self.settings_button = ctk.CTkButton(master=self.frame, 
                                         text="", 
                                         image=self.settings, 
-                                        fg_color=("white", "grey"), 
+                                        fg_color="white", 
                                         width=60, 
                                         corner_radius=6,
-                                        command=self.doNothing)
-        self.settings_button.grid(row=2, column=0, padx=5, pady=5)
+                                        command=self.displaySettingsWindow)
+        self.settings_button.grid(row=2, column=0, padx=5, pady=5, sticky="w")
         
     def doNothing(self):
         print("ASD")
+    
+    def displaySettingsWindow(self):
+        settings_window = ctk.CTkToplevel(self.frame)
+        settings_window.geometry("500x400")
+        settings_window.title("Settings")
+        settings_window.columnconfigure((0,1), weight=1)
 
+        appearance_label = ctk.CTkLabel(master=settings_window, text="Appearance:")
+        appearance_label.grid(column=0, row=0, sticky="e", pady=20)
+
+        appearance_option_menu = ctk.CTkOptionMenu(master=settings_window, values=["Dark", "Light"], command=self.change_appearance_mode)
+        appearance_option_menu.grid(column=1, row=0, sticky="w", pady=20)
+    
+    # Settings Functions
+    def change_appearance_mode(self, new_appearance_mode):
+        ctk.set_appearance_mode(new_appearance_mode)
 
 
 class MainWindow(ctk.CTk):
     def __init__(self, frame):
+        super().__init__()
         self.frame = frame
  
         #1x2 right grid
         self.frame.columnconfigure(0, weight=1)
         self.frame.rowconfigure((0,1), weight=1)
 
-
+        # configuring top grid
         self.frame_right_up = ctk.CTkFrame(master=self.frame, corner_radius=21)
         self.frame_right_up.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.frame_right_up.columnconfigure(1, weight=1)
 
+        # Configuring bottom grid
         self.frame_right_down = ctk.CTkFrame(master=self.frame, corner_radius=21)
         self.frame_right_down.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
         self.frame_right_down.columnconfigure(0, weight=1)
@@ -100,28 +122,26 @@ class MainWindow(ctk.CTk):
         self.input_button.grid(column=2, row=1, padx=10, pady=10, sticky="we")
 
         self.print_ticker = ctk.CTkLabel(master=self.frame_right_up, text="")
-        self.print_ticker.grid(column=1, row=2)
+        self.print_ticker.grid(column=1, row=2, padx=10, pady=10)
 
-        self.conclusion_button = ctk.CTkButton(master=self.frame_right_up, text="Print Data", border_width=2, command=self.getData)
-        self.conclusion_button.grid(column=1, row=3)
+        self.conclusion_button = ctk.CTkButton(master=self.frame_right_up, text="Scrape Data", border_width=2, command=self.getData)
+        self.conclusion_button.grid(column=1, row=3, padx=10, pady=10)
 
-        self.print_conclusion = ctk.CTkLabel(master=self.frame_right_up, 
-                                            text="Plot Type:",
-                                            justify=tk.CENTER)
-        self.print_conclusion.grid(column=1, row=4, sticky="we")
+        self.print_conclusion = ctk.CTkLabel(master=self.frame_right_up, text="")
+        self.print_conclusion.grid(column=1, row=4, sticky="we", padx=10, pady=10)
 
-        self.type_label = ctk.CTkLabel(master=self.frame_right_up, text="")
-        self.type_label.grid(column=0, row=5)
+        self.type_label = ctk.CTkLabel(master=self.frame_right_up, text="Plot Type:")
+        self.type_label.grid(column=0, row=5, padx=10, pady=10, sticky="e")
 
         self.plot_type = ctk.CTkOptionMenu(master=self.frame_right_up, values=["Close", "Open", "High", "Low"])
-        self.plot_type.grid(column=1, row=5)
+        self.plot_type.grid(column=1, row=5, padx=10, pady=10)
 
         self.plot_button = ctk.CTkButton(master=self.frame_right_up, text="Plot History", border_width=2, command=self.plotHistory)
-        self.plot_button.grid(column=1, row=6)
+        self.plot_button.grid(column=1, row=6, padx=10, pady=10)
 
     def printInput(self):
-        self.input_ticker = self.entry_ticker.get()
-        self.print_ticker.config(text=f"Ticker: {self.input_ticker}")
+        ticker = self.entry_ticker.get()
+        self.print_ticker.config(text=f"Ticker: {ticker}")
         self.stock = Stock(self.input_ticker)
 
     def getData(self):
@@ -156,7 +176,6 @@ class MainApp(ctk.CTk):
         self.protocol("WM_DELETE_WINDOW", self.onClosing)
 
         # 2x1 main grid
-        self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=1)
         self.rowconfigure((0,1), weight=1)
 
@@ -175,7 +194,7 @@ class MainApp(ctk.CTk):
         self.main = MainWindow(self.frame_right)
     
     def onClosing(self, event=0):
-        self.destroy()
+        self.quit()
 
 
 if __name__ == "__main__":
