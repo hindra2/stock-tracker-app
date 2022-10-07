@@ -27,25 +27,35 @@ class Toolbar(ctk.CTk):
     def initImage(self):
         self.home = tk.PhotoImage(file=f"{ui_path}home.png")
         self.globe = tk.PhotoImage(file=f"{ui_path}globe.png")
+        self.settings = tk.PhotoImage(file=f"{ui_path}settings.png")
     
     def initUI(self):
-        self.insert_thing = ctk.CTkButton(master=self.frame, 
+        self.home_button = ctk.CTkButton(master=self.frame, 
                                         text="", 
                                         image=self.home, 
                                         fg_color=("white", "grey"),  
                                         width=60, 
                                         corner_radius=6,
                                         command=self.doNothing)
-        self.insert_thing.grid(row=0, column=0, padx=5, pady=5)
+        self.home_button.grid(row=0, column=0, padx=5, pady=5)
         
-        self.print_thing = ctk.CTkButton(master=self.frame, 
+        self.globe_button = ctk.CTkButton(master=self.frame, 
                                         text="", 
                                         image=self.globe, 
                                         fg_color=("white", "grey"), 
                                         width=60, 
                                         corner_radius=6,
                                         command=self.doNothing)
-        self.print_thing.grid(row=1, column=0, padx=5, pady=5)
+        self.globe_button.grid(row=1, column=0, padx=5, pady=5)
+
+        self.settings_button = ctk.CTkButton(master=self.frame, 
+                                        text="", 
+                                        image=self.settings, 
+                                        fg_color=("white", "grey"), 
+                                        width=60, 
+                                        corner_radius=6,
+                                        command=self.doNothing)
+        self.settings_button.grid(row=2, column=0, padx=5, pady=5)
         
     def doNothing(self):
         print("ASD")
@@ -58,16 +68,17 @@ class MainWindow(ctk.CTk):
  
         #1x2 right grid
         self.frame.columnconfigure(0, weight=1)
-        self.frame.rowconfigure(0, weight=1)
+        self.frame.rowconfigure((0,1), weight=1)
 
 
         self.frame_right_up = ctk.CTkFrame(master=self.frame, corner_radius=21)
-        self.frame_right_up.grid(row=0, column=0, padx=5, pady=5, sticky="nswe")
+        self.frame_right_up.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.frame_right_up.columnconfigure(1, weight=1)
 
         self.frame_right_down = ctk.CTkFrame(master=self.frame, corner_radius=21)
-        self.frame_right_down.grid(row=1, column=0, padx=5, pady=5, sticky="nswe")
+        self.frame_right_down.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
         self.frame_right_down.columnconfigure(0, weight=1)
+        self.frame_right_down.rowconfigure(0, weight=1)
 
         self.initUI()
 
@@ -82,7 +93,7 @@ class MainWindow(ctk.CTk):
                                         placeholder_text="Type Here...")
         self.entry_ticker.grid(column=1, row=1, padx=10, pady=10, sticky="we")
 
-        self.input_button = ctk.CTkButton(master=self.frame_right_up, 
+        self.input_button = ctk.CTkButton(master=self.frame_right_up,  
                                         text="Input", 
                                         border_width=2, 
                                         command=self.printInput)
@@ -118,7 +129,7 @@ class MainWindow(ctk.CTk):
         priceRange = self.stock.getPriceRange()
         volume = self.stock.getVolume()
         name = self.stock.name
-        self.print_conclusion.config(text=f"Name: {name}\nOpening Price:  {openingPrice}\nPrice Range: {priceRange}\nVolume: {volume}")
+        self.print_conclusion.config(text=f"Company Name: {name}\nOpening Price:  {openingPrice}\nPrice Range: {priceRange}\nVolume: {volume}")
 
     def plotHistory(self):
         type = self.plot_type.get()
@@ -147,12 +158,12 @@ class MainApp(ctk.CTk):
         # 2x1 main grid
         self.columnconfigure(0, weight=0)
         self.columnconfigure(1, weight=1)
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure((0,1), weight=1)
 
         self.frame_left = ctk.CTkFrame(master=self, corner_radius=0, width=70)
         self.frame_left.grid(row=0, column=0, rowspan=2, sticky="nswe")
 
-        self.frame_right = ctk.CTkFrame(master=self, corner_radius=21)
+        self.frame_right = ctk.CTkFrame(master=self, corner_radius=6)
         self.frame_right.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
 
         self.initUI()
