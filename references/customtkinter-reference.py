@@ -50,7 +50,7 @@ class App(customtkinter.CTk):
                                                 command=self.button_event)
         self.button_1.grid(row=2, column=0, pady=10, padx=20)
 
-        self.button_2 = customtkinter.CTkButton(master=self.frame_left,
+        self.button_2 = customtkinter.CTkButton(master=self.frame_left, 
                                                 text="CTkButton",
                                                 command=self.button_event)
         self.button_2.grid(row=3, column=0, pady=10, padx=20)

@@ -32,7 +32,7 @@ class Stock:
         plt.plot(self.history.index,self.history[type], marker=".", label=type)
         plt.ylabel("Price (USD)")
         plt.xlabel("Date (Year)")
-        cursor(hover=True)  
+        cursor(hover=True)
         plt.legend()
         return graph
 

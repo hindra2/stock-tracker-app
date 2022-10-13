@@ -12,52 +12,88 @@ ctk.set_appearance_mode("Light")
 ctk.set_default_color_theme("dark-blue")
 
 
-class LoginPage(ctk.CTkFrame):
-    def __init__(self, master):
+class Toolbar(ctk.CTk):
+    def __init__(self, frame):
         super().__init__()
+        self.frame = frame
+        self.frame.rowconfigure(1, weight=1)
+
+        self.initImage()
         self.initUI()
 
+    def initImage(self):
+        self.home = tk.PhotoImage(file=f"{ui_path}home.png")
+        self.globe = tk.PhotoImage(file=f"{ui_path}globe.png")
+        self.settings = tk.PhotoImage(file=f"{ui_path}settings.png")
+
     def initUI(self):
-        # Configuring Grid
-        self.columnconfigure((0, 1), weight=1)
-        self.rowconfigure(0, weight=1)
+        self.home_button = ctk.CTkButton(master=self.frame,
+                                         text="",
+                                         image=self.home,
+                                         fg_color="white",
+                                         width=60,
+                                         corner_radius=6,
+                                         command=self.doNothing)
+        self.home_button.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
-        # UI Elements For Login Page
-        self.username_label = ctk.CTkLabel(master=self, text="Username:")
-        self.username_label.grid(column=0, row=0, padx=50, pady=25)
+        self.globe_button = ctk.CTkButton(master=self.frame,
+                                          text="",
+                                          image=self.globe,
+                                          fg_color="white",
+                                          width=60,
+                                          corner_radius=6,
+                                          command=self.doNothing)
+        self.globe_button.grid(row=1, column=0, padx=5, pady=5, sticky="n")
 
-        self.user_username = ctk.CTkEntry(master=self)
-        self.user_username.grid(column=1, row=0, padx=50, pady=25, sticky="nswe")
+        self.settings_button = ctk.CTkButton(master=self.frame,
+                                             text="",
+                                             image=self.settings,
+                                             fg_color="white",
+                                             width=60,
+                                             corner_radius=6,
+                                             command=self.displaySettingsWindow)
+        self.settings_button.grid(row=2, column=0, padx=5, pady=5, sticky="w")
 
-        self.password_label = ctk.CTkLabel(master=self, text="Password:")
-        self.password_label.grid(column=0, row=1, padx=50, pady=25)
+    def doNothing(self):
+        print("ASD")
 
-        self.user_password = ctk.CTkEntry(master=self)
-        self.user_password.grid(column=1, row=1, padx=50, pady=25, sticky="nswe")
+    def displaySettingsWindow(self):
+        settings_window = ctk.CTkToplevel(self.frame)
+        settings_window.geometry("500x400")
+        settings_window.title("Settings")
+        settings_window.columnconfigure((0, 1), weight=1)
 
-        self.login_button = ctk.CTkButton(master=self,
-                                          text="Login",
-                                          command=lambda: self.callback())
-        self.login_button.grid(column=0, row=2, columnspan=2, padx=50, pady=25, sticky="nswe")
+        appearance_label = ctk.CTkLabel(master=settings_window, text="Appearance:")
+        appearance_label.grid(column=0, row=0, sticky="e", pady=20)
 
-    def onlift(self):
-        self.lift()
+        appearance_option_menu = ctk.CTkOptionMenu(master=settings_window, values=["Dark", "Light"],
+                                                   command=self.change_appearance_mode)
+        appearance_option_menu.grid(column=1, row=0, sticky="w", pady=20)
+
+    # Settings Functions
+    def change_appearance_mode(self, new_appearance_mode):
+        ctk.set_appearance_mode(new_appearance_mode)
 
 
-class MainWindow(ctk.CTkFrame):
-    def __init__(self, master):
+class loginPage(ctk.CTk):
+    pass
+
+class MainWindow(ctk.CTk):
+    def __init__(self, frame):
         super().__init__()
+        self.frame = frame
+
         # 1x2 right grid
-        self.columnconfigure(0, weight=1)
-        self.rowconfigure((0, 1), weight=1)
+        self.frame.columnconfigure(0, weight=1)
+        self.frame.rowconfigure((0, 1), weight=1)
 
         # configuring top grid
-        self.frame_right_up = ctk.CTkFrame(master=self, corner_radius=21)
+        self.frame_right_up = ctk.CTkFrame(master=self.frame, corner_radius=21)
         self.frame_right_up.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
         self.frame_right_up.columnconfigure(1, weight=1)
 
         # Configuring bottom grid
-        self.frame_right_down = ctk.CTkFrame(master=self, corner_radius=21)
+        self.frame_right_down = ctk.CTkFrame(master=self.frame, corner_radius=21)
         self.frame_right_down.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
         self.frame_right_down.columnconfigure(0, weight=1)
         self.frame_right_down.rowconfigure(0, weight=1)
@@ -131,9 +167,6 @@ class MainWindow(ctk.CTkFrame):
         toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
         toolbar.update()
 
-    def onlift(self):
-        self.lift()
-
 
 class MainApp(ctk.CTk):
     WIDTH = 750
@@ -152,78 +185,16 @@ class MainApp(ctk.CTk):
 
         self.frame_left = ctk.CTkFrame(master=self, corner_radius=0, width=70)
         self.frame_left.grid(row=0, column=0, rowspan=2, sticky="nswe")
-        self.frame_left.rowconfigure(1, weight=1)
 
-        # Constant Window Components
-        self.initImage()
-        self.initSettingsUI()
+        self.frame_right = ctk.CTkFrame(master=self, corner_radius=6)
+        self.frame_right.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
 
-        # Changing Window Components
-        self.page1 = LoginPage(self)
-        self.page1.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
-        self.page2 = MainWindow(self)
-        self.page2.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
-
-        self.page1.callback = self.page2.onlift
-
-        self.page1.lift()
-
-    # Images for Toolbar Buttons
-    def initImage(self):
-        self.home = tk.PhotoImage(file=f"{ui_path}home.png")
-        self.globe = tk.PhotoImage(file=f"{ui_path}globe.png")
-        self.settings = tk.PhotoImage(file=f"{ui_path}settings.png")
-
-    # Toolbar UI
-    def initSettingsUI(self):
-        self.home_button = ctk.CTkButton(master=self.frame_left,
-                                         text="",
-                                         image=self.home,
-                                         fg_color="white",
-                                         width=60,
-                                         corner_radius=6,
-                                         command=self.lift)
-        self.home_button.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-
-        self.globe_button = ctk.CTkButton(master=self.frame_left,
-                                          text="",
-                                          image=self.globe,
-                                          fg_color="white",
-                                          width=60,
-                                          corner_radius=6,
-                                          command="")
-        self.globe_button.grid(row=1, column=0, padx=5, pady=5, sticky="n")
-
-        self.settings_button = ctk.CTkButton(master=self.frame_left,
-                                             text="",
-                                             image=self.settings,
-                                             fg_color="white",
-                                             width=60,
-                                             corner_radius=6,
-                                             command=self.displaySettingsWindow)
-        self.settings_button.grid(row=2, column=0, padx=5, pady=5, sticky="w")
-
-    def displaySettingsWindow(self):
-        settings_window = ctk.CTkToplevel(self.frame_left)
-        settings_window.geometry("500x400")
-        settings_window.title("Settings")
-        settings_window.columnconfigure((0, 1), weight=1)
-
-        appearance_label = ctk.CTkLabel(master=settings_window, text="Appearance:")
-        appearance_label.grid(column=0, row=0, sticky="e", pady=20)
-
-        appearance_option_menu = ctk.CTkOptionMenu(master=settings_window,
-                                                   values=["Dark", "Light"],
-                                                   command=self.change_appearance_mode)
-        appearance_option_menu.grid(column=1, row=0, sticky="w", pady=20)
-
-        # Settings Functions
-    def change_appearance_mode(self, new_appearance_mode):
-            ctk.set_appearance_mode(new_appearance_mode)
+        # Main Window Components
+        self.toolbar = Toolbar(self.frame_left)
+        self.main = MainWindow(self.frame_right)
 
     def onClosing(self, event=0):
         self.quit()
-
 
 if __name__ == "__main__":
     app = MainApp()
