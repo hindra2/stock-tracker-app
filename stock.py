@@ -4,6 +4,7 @@ from mplcursors import cursor
 import pandas
 import tkinter as tk
 
+
 class Stock:
     def __init__(self, ticker):
         self.ticker = yf.Ticker(ticker)
