@@ -92,7 +92,6 @@ class SearchingPage(ctk.CTkFrame):
                                        text="Plot Type:",
                                        text_font=("Arial", 15))
         self.type_label.grid(column=0, row=4, padx=10, pady=10, sticky="e")
-
         self.plot_type = ctk.CTkOptionMenu(master=self.frame_right_up,
                                            values=["Close", "Open", "High", "Low"],
                                            text_font=("Arial", 15),
