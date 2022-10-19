@@ -11,7 +11,7 @@ class Login:
         self.information = None # open csv
 
     def saveLoginInfo(self):
-        # write login info in csv file
+        # write login info in txt file
         pass
 
 
@@ -55,4 +55,3 @@ class MainApp(ctk.CTk):
 
         self.login_button = ctk.CTkButton(master=self.center_frame, text="Login")
         self.login_button.grid(column=0, row=2, columnspan=2, padx=50, pady=25, sticky="nswe")
-        

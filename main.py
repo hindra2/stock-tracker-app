@@ -101,11 +101,12 @@ class SearchingPage(ctk.CTkFrame):
     def print_input(self):
         ticker = self.entry_ticker.get()
         self.print_ticker.configure(text=f"Ticker: {ticker}")
-        opening_price = Stock(ticker).getOpeningPrice()
-        price_range = Stock(ticker).getPriceRange()
-        volume = Stock(ticker).getVolume()
-        stock_name = Stock(ticker).name()
-        self.print_conclusion.configure(text=f"Company Name: {stock_name}\nOpening Price:  {opening_price}\nPrice Range: {price_range}\nVolume: {volume}")
+        self.stock = Stock(ticker)
+        opening_price = self.stock.getOpeningPrice()
+        price_range = self.stock.getPriceRange()
+        volume = self.stock.getVolume()
+        name = self.stock.getName()
+        self.print_conclusion.configure(text=f"Company Name: {name}\nOpening Price:  {opening_price}\nPrice Range: {price_range}\nVolume: {volume}")
 
     def plot_history(self, type):
         graph = self.stock.plotHistory(type)

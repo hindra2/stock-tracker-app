@@ -28,6 +28,9 @@ class Stock:
     def getHistory(self):
         return self.history
 
+    def getName(self):
+        return self.name
+
     def plotHistory(self, type):
         graph = plt.figure()
         plt.plot(self.history.index,self.history[type], marker=".", label=type)
