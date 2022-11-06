@@ -42,7 +42,8 @@ class Stock:
 
 
 class TopStocks(Stock):
-    def __init__(self, index, history):
+    def __init__(self, index, history, ticker):
+        super().__init__(ticker)
         self.index = index
         self.history = history
 

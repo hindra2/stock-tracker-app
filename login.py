@@ -1,5 +1,4 @@
-import tkinter
-import customtkinter as ctk
+import json
 import pandas as pd
 
 
@@ -8,50 +7,20 @@ class Login:
         self.username = username
         self.password = password
 
-        self.information = None # open csv
+        self.information_file_path = "./users.json"
+        self.information_file = open(self.information_file_path, "w")
 
     def saveLoginInfo(self):
-        # write login info in txt file
-        pass
+        with open(self.information_file_path, 'a') as f:
+            f.write("\n" + self.username + "," + self.password)
 
-
-class MainApp(ctk.CTk):
-
-    WIDTH=480
-    HEIGHT=300
-
-    def __init__(self):
-        super(). __init__()
-
-        self.geometry(f"{MainApp.WIDTH}x{MainApp.HEIGHT}")
-        self.title("Login")
-        self.protocol("WM_DELETE_WINDOW", self.onClosing)
-
-        self.initUI()
-
-
-    def onClosing(self, event=0):
-        self.quit()
-
-    def initUI(self):
-        self.center_frame = ctk.CTkFrame(master=self, corner_radius=6)
-        self.center_frame.grid(column=0, row=0, sticky="nswe")
-
-        self.columnconfigure((0), weight=1)
-        self.center_frame.columnconfigure((0), weight=1)
-
-
-        self.username_label = ctk.CTkLabel(master=self.center_frame, text="Username:")
-        self.username_label.grid(column=0, row=0, padx=50, pady=25)
-
-        self.user_username = ctk.CTkEntry(master=self.center_frame)
-        self.user_username.grid(column=1, row=0, padx=50, pady=25, sticky="nswe")
-
-        self.password_label = ctk.CTkLabel(master=self.center_frame, text="Password:")
-        self.password_label.grid(column=0, row=1, padx=50, pady=25)
-
-        self.user_password = ctk.CTkEntry(master=self.center_frame)
-        self.user_password.grid(column=1, row=1, padx=50, pady=25, sticky="nswe")
-
-        self.login_button = ctk.CTkButton(master=self.center_frame, text="Login")
-        self.login_button.grid(column=0, row=2, columnspan=2, padx=50, pady=25, sticky="nswe")
+    def validate_login(self, username, password):
+        with open(self.information_file_path, 'r') as f:
+            readable = f.read()
+            lines = readable.splitlines()
+            user = list(filter(lambda l: l.split(',')[0] == self.username and l.split(',')[1] == self.password, lines))
+            if user:
+                print("Login successful")
+            else:
+                print("Login failed. Wrong Username or Password.")
+            f.close()

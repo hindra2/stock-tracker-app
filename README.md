@@ -1,2 +1,2 @@
 # compsci-ia
- Computere Science SL Internal Assesment
+ Computer Science SL Internal Assessment
