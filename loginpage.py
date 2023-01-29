@@ -1,72 +1,58 @@
-from flet import (
-    UserControl,
-    Container,
-    Column,
-    Row,
-    Text,
-    ElevatedButton,
-    TextField,
-    alignment,
-    colors,
-    margin,
-    padding,
-    Page
-)
-from flet.ref import Ref
-from login import Login
+import customtkinter as ctk
+import login
+import mainPage
 
-
-class LoginPage(UserControl):
-    def __init__(self, page):
+class LoginPage(ctk.CTk):
+    def __init__(self):
         super().__init__()
-        self.username = Ref[TextField]()
-        self.password = Ref[TextField]()
-        self.page = page
+        self.title("Login Page")
 
-    def login(self, e):
-        self.page.go("/home")
+        # Configuring Grid
+        self.columnconfigure((0, 1), weight=1)
+        self.rowconfigure(0, weight=1)
 
-    def build(self):
-        # compiling all in one container
-        return Container(
-            alignment=alignment.center,
-            content=Container(
-                padding=padding.symmetric(vertical=200),
-                width=600,
-                alignment=alignment.center,
-                content=Column([
-                        Row(
-                            controls=[
-                                TextField(
-                                    ref=self.username,
-                                    label="Username",
-                                    hint_text="Enter here",
-                                    expand=1,
-                                )
-                            ]
-                        ),
-                    Row(
-                            controls=[
-                                TextField(
-                                    ref=self.password,
-                                    label="Password",
-                                    hint_text="Enter here",
-                                    password=True,
-                                    can_reveal_password=True,
-                                    expand=1
-                                )
-                            ]
-                    ),
-                    Row(
-                        alignment="center",
-                        controls=[
-                            ElevatedButton(
-                                text="Login",
-                                width=400,
-                                on_click=self.login
-                            )
-                        ]
-                    )
-                ])
-            )
-        )
+        # UI Elements For Login Page
+        self.username_label = ctk.CTkLabel(master=self, text="Username:", font=("Arial", 15))
+        self.username_label.grid(column=0, row=0, padx=50, pady=25, sticky="we")
+
+        self.user_username = ctk.CTkEntry(master=self, font=("Arial", 15))
+        self.user_username.grid(column=1, row=0, padx=50, pady=25, sticky="we")
+
+        self.password_label = ctk.CTkLabel(master=self, text="Password:", font=("Arial", 15))
+        self.password_label.grid(column=0, row=1, padx=50, pady=25, sticky="we")
+
+        self.user_password = ctk.CTkEntry(master=self, font=("Arial", 15), show="*")
+        self.user_password.grid(column=1, row=1, padx=50, pady=25, sticky="we")
+        
+        self.validation_label = ctk.CTkLabel(master=self, text="", font=("Arial", 15))
+        self.validation_label.grid(column=0, row=2, columnspan=2, padx=50, pady=5, sticky="we")
+
+        self.login_button = ctk.CTkButton(master=self,
+                                          text="Login",
+                                          command=self.login,
+                                          font=("Arial", 15))
+        self.login_button.grid(column=0, row=3, columnspan=2, padx=50, pady=50, sticky="nswe")
+
+    def onlift(self):
+        self.lift()
+
+    def write_login(self):
+        username = self.user_username.get()
+        password = self.user_password.get()
+        user_instance = login.Login(username, password)
+        user_instance.saveLoginInfo()
+
+    def login(self):
+        self.username = self.user_username.get()
+        self.password = self.user_password.get()
+        if login.validate_login(self.username, self.password):
+            self.destroy()
+            app = mainPage.MainApp()
+            app.mainloop()
+        else:
+            self.validation_label.configure(text="Invalid Login Info!")
+
+
+if __name__ == "__main__":
+    app = LoginPage()
+    app.mainloop()

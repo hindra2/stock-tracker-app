@@ -9,15 +9,15 @@ class Stock:
     def __init__(self, ticker):
         self.ticker = yf.Ticker(ticker)
         self.name = self.ticker.info["longName"]
-        self.openingPrice = self.ticker.info["open"]
-        self.highPrice = self.ticker.info["dayHigh"]
-        self.lowPrice = self.ticker.info["dayLow"]
-        self.volume = self.ticker.info['volume']
+        self.openingPrice = self.ticker.fast_info["open"]
+        self.highPrice = self.ticker.fast_info["day_high"]
+        self.lowPrice = self.ticker.fast_info["day_low"]
+        self.volume = self.ticker.fast_info['last_volume']
         self.history = self.ticker.history(period='1y')
-        self.currentPrice = self.ticker.info["currentPrice"]
+        self.currentPrice = self.ticker.fast_info["last_price"]
 
-    def getOpeningPrice(self):
-        return self.openingPrice
+    def getOpeningPrice(self, tickers):
+        return round(self.openingPrice)
 
     def getPriceRange(self):
         return self.highPrice - self.lowPrice
