@@ -34,14 +34,40 @@ class HomePage(ctk.CTkFrame):
         self.news_head = ctk.CTkLabel(master=self.news_frame_top, text="Headlines", font=("Arial", 25))
         self.news_head.grid(row=0, column=0, padx=10, pady=10, sticky="we")
 
-        headlines = scraper.scrape()
-        for i in headlines:
-            self.news_label = ctk.CTkButton(self.news_frame_bottom, 
-                                            text=headlines[i][0], 
+        self.news_tab = ctk.CTkTabview(master=self.news_frame_bottom)
+        self.news_tab.grid(row=0, sticky="we")
+
+        # Tab instances
+        bbc_tab = self.news_tab.add("BBC")
+        bbc_tab.columnconfigure(0, weight=1)
+
+        google_tab = self.news_tab.add("Bloomberg")
+        google_tab.columnconfigure(0, weight=1)
+
+        # Scraping from bbc
+        headlines = scraper.scrape("https://www.bbc.com/news/business", "a", "gs-c-promo-heading", "https://www.bbc.com")
+        for i, headline in enumerate(headlines):
+            title, link = headline
+
+            self.news_label = ctk.CTkButton(bbc_tab, 
+                                            text=title, 
                                             fg_color="gray23",  
                                             hover_color=("gray70", "gray30"), 
                                             font=("Arial", 30),
-                                            command=lambda: self.web(headlines[i][1]))
+                                            command=lambda: self.web(link))
+            self.news_label.grid(row=i, pady=6, padx=30, sticky="we")
+
+        # Scraping from google finance
+        headlines = scraper.scrape("https://www.bloomberg.com/markets", "a", "top-news-v3-story__headline", "https://www.bbc.com")
+        for i, headline in enumerate(headlines):
+            title, link = headline
+
+            self.news_label = ctk.CTkButton(bbc_tab, 
+                                            text=title, 
+                                            fg_color="gray23",  
+                                            hover_color=("gray70", "gray30"), 
+                                            font=("Arial", 30),
+                                            command=lambda: self.web(link))
             self.news_label.grid(row=i, pady=6, padx=30, sticky="we")
     
     def web(self, url):

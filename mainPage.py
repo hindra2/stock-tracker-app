@@ -3,6 +3,7 @@ from stock import Stock
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from PIL import Image
 import os
+import schedule
 
 import loginPage
 import searchingPage
