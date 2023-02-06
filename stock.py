@@ -3,32 +3,38 @@ import matplotlib.pyplot as plt
 from mplcursors import cursor
 import pandas
 import tkinter as tk
+import pickle
+import os
 
+database_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "user_stock")
 
 class Stock:
     def __init__(self, ticker):
         self.ticker = yf.Ticker(ticker)
-        self.name = self.ticker.info["longName"]
-        self.openingPrice = self.ticker.fast_info["open"]
-        self.highPrice = self.ticker.fast_info["day_high"]
-        self.lowPrice = self.ticker.fast_info["day_low"]
-        self.volume = self.ticker.fast_info['last_volume']
-        self.history = self.ticker.history(period='1y')
+    
+    def getCurrentPrice(self):
         self.currentPrice = self.ticker.fast_info["last_price"]
+        return self.currentPrice
 
-    def getOpeningPrice(self, tickers):
+    def getOpeningPrice(self):
+        self.openingPrice = self.ticker.fast_info["open"]
         return round(self.openingPrice)
 
     def getPriceRange(self):
+        self.highPrice = self.ticker.fast_info["day_high"]
+        self.lowPrice = self.ticker.fast_info["day_low"]
         return self.highPrice - self.lowPrice
 
     def getVolume(self):
+        self.volume = self.ticker.fast_info['last_volume']
         return self.volume
 
     def getHistory(self):
+        self.history = self.ticker.history(period='1y')
         return self.history
 
     def getName(self):
+        self.name = self.ticker.info["shortName"]
         return self.name
 
     def plotHistory(self, type):
@@ -40,12 +46,54 @@ class Stock:
         plt.legend()
         return graph
 
-
-class TopStocks(Stock):
-    def __init__(self, index, history, ticker):
+class InputStock(Stock):
+    def __init__(self, ticker, count, buy_price, lower_bound, upper_bound):
         super().__init__(ticker)
-        self.index = index
-        self.history = history
+        self.ticker = ticker
+        self.count = count
+        self.buy_price = buy_price
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
+    
+    def dump_data(self):
+        try:
+            data = {
+                self.ticker: {
+                    "Count": self.count,
+                    "Bought Price": self.buy_price,
+                    "Upper Bound": self.upper_bound,
+                    "Lower Bound": self.lower_bound
+                }
+            }
 
-    def scrapeGain(index):
-        pass
+            database = open("user_stock", "ab")
+            pickle.dump(data, database)
+            database.close()
+        except TypeError:
+            print("No Ticker Specified")
+    
+    @classmethod
+    def load_data(cls):
+        try:
+            data_list = []
+
+            with open("user_stock", "rb") as f:
+                    try:
+                        while True:
+                            data = pickle.load(f)
+                            data_list.append(data)
+                            print(data)
+                    except EOFError:
+                        print("Done loading data")
+            
+            return data_list
+
+        except (FileNotFoundError, pickle.UnpicklingError) as e:
+            print(f"Error loading data: {e}")
+                
+        except EOFError:
+            print("No data in database or corrupted data")
+        
+        finally:
+            f.close()
+

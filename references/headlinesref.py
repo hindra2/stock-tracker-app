@@ -1,15 +1,24 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://www.bbc.com/news/business"
-response = requests.get(url)
-soup = BeautifulSoup(response.text, "html.parser")
 
-# Find all the headline elements on the page
-headlines = soup.find_all("a", class_="gs-c-promo-heading")
+def scrape_yfinance():
+    url = "https://finance.yahoo.com/news/"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
 
-# Extract the text and link of each headline
-for i, headline in enumerate(headlines[:10]):
-    text = headline.text
-    link = headline["href"]
-    print(f"{i+1}. {text} ({link})")
+    scraped_headlines =  soup.find_all("h3")
+
+    headlines = []
+
+    for h3_tag in scraped_headlines:
+        headline = h3_tag.text
+        link = h3_tag.find("a")["href"]
+        headlines.append([headline, f"https://finance.yahoo.com{link}"])
+
+    return headlines[6:11]
+
+listst = scrape_yfinance()
+
+text = listst[0][0]
+link = listst[0][1]

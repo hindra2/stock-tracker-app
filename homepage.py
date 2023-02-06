@@ -1,10 +1,15 @@
+# Library Imports
 import customtkinter as ctk
 import webbrowser
 import scraper
 
+# Home Page main class
 class HomePage(ctk.CTkFrame):
     def __init__(self, master):
+        # Inherits properties of CTkFrame, and passes in master as the root of the Frame
         super().__init__(master)
+
+        # Sets a 2x1 grid
         self.columnconfigure((0, 1), weight=1)
         self.rowconfigure(1, weight=1)
 
@@ -37,41 +42,51 @@ class HomePage(ctk.CTkFrame):
         self.news_tab = ctk.CTkTabview(master=self.news_frame_bottom)
         self.news_tab.grid(row=0, sticky="we")
 
-        # Tab instances
-        bbc_tab = self.news_tab.add("BBC")
-        bbc_tab.columnconfigure(0, weight=1)
+        # Different tabs for different news sources
+        self.bbc_tab = self.news_tab.add("BBC")
+        self.bbc_tab.columnconfigure(0, weight=1)
 
-        google_tab = self.news_tab.add("Bloomberg")
-        google_tab.columnconfigure(0, weight=1)
+        self.display_bbc_headlines()
 
+        self.yfinance_tab = self.news_tab.add("Yahoo Finance")
+        self.yfinance_tab.columnconfigure(0, weight=1)
+
+        self.display_yfinance_headlines()
+
+    def display_bbc_headlines(self):
         # Scraping from bbc
-        headlines = scraper.scrape("https://www.bbc.com/news/business", "a", "gs-c-promo-heading", "https://www.bbc.com")
-        for i, headline in enumerate(headlines):
-            title, link = headline
+        headlines_bbc = scraper.scrape_bbc()
+        for i, headline in enumerate(headlines_bbc):
+            title_bbc, link_bbc = headline
+            news = scraper.News(title_bbc, link_bbc)
 
-            self.news_label = ctk.CTkButton(bbc_tab, 
-                                            text=title, 
+            self.bbc_news_label = ctk.CTkButton(self.bbc_tab, 
+                                            text=news.return_headline(), 
                                             fg_color="gray23",  
                                             hover_color=("gray70", "gray30"), 
-                                            font=("Arial", 30),
-                                            command=lambda: self.web(link))
-            self.news_label.grid(row=i, pady=6, padx=30, sticky="we")
+                                            font=("Arial", 25),)
+            self.bbc_news_label.bind("<Button-1>", lambda event, link=news.return_url(): self.web(link))
+            self.bbc_news_label.grid(row=i, pady=6, padx=30, sticky="we")
 
-        # Scraping from google finance
-        headlines = scraper.scrape("https://www.bloomberg.com/markets", "a", "top-news-v3-story__headline", "https://www.bbc.com")
-        for i, headline in enumerate(headlines):
-            title, link = headline
+    def display_yfinance_headlines(self):
+        # Scraping from yfinance
+        headlines_yfinance = scraper.scrape_yfinance()
+        for i, headline in enumerate(headlines_yfinance):
+            title_yfinance, link_yfinance = headline
+            news = scraper.News(title_yfinance, link_yfinance)
 
-            self.news_label = ctk.CTkButton(bbc_tab, 
-                                            text=title, 
+            self.yfinance_news_label = ctk.CTkButton(self.yfinance_tab, 
+                                            text=news.return_headline(), 
                                             fg_color="gray23",  
                                             hover_color=("gray70", "gray30"), 
-                                            font=("Arial", 30),
-                                            command=lambda: self.web(link))
-            self.news_label.grid(row=i, pady=6, padx=30, sticky="we")
+                                            font=("Arial", 25))
+            self.yfinance_news_label.bind("<Button-1>", lambda event, link=news.return_url(): self.web(link))
+            self.yfinance_news_label.grid(row=i, pady=6, padx=30, sticky="we")
     
+    # Function to open links
     def web(self, url):
         webbrowser.open_new(url)
     
+    # Function to implement Frame switching
     def onlift(self):
         self.lift()
