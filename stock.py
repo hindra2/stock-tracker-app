@@ -82,7 +82,6 @@ class InputStock(Stock):
                         while True:
                             data = pickle.load(f)
                             data_list.append(data)
-                            print(data)
                     except EOFError:
                         print("Done loading data")
             

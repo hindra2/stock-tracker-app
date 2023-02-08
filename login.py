@@ -5,6 +5,7 @@ import os
 # Specify Database Path relative to os
 database_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "users")
 
+
 # User class
 class User:
     def __init__(self, username, password):
@@ -29,7 +30,7 @@ class User:
     # Validates if user data is in pickle database
     def validate_login(self):
         try:
-            with open("users", 'rb') as f:
+            with open(database_path, 'rb') as f:
                 try:
                     # Loops checking of username and password to see if there is a valid combination in the database, return True if found
                     while True:
