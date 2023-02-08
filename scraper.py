@@ -31,7 +31,7 @@ def scrape_bbc():
         headlines.append((headline, f"https://www.bbc.com{link}"))
 
     # Returns the first 5 elements of a list
-    return headlines[:5]
+    return headlines[:20]
 
 def scrape_yfinance():
     url = "https://finance.yahoo.com/news/"
@@ -49,4 +49,4 @@ def scrape_yfinance():
         headlines.append((headline, f"https://finance.yahoo.com{link}"))
 
     # Returns headlins 6-11 as the first 6 are not news headlines
-    return headlines[6:11]
+    return headlines[6:26]

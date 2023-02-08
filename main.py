@@ -8,7 +8,7 @@ import multiprocessing
 
 # In order to update the news display, some functions need to run in the background
 # Therefore, the multiprocessing library cajn be used to simultaneously run the main and sub functions
-def multithreading_functions():
+def multithreading_scraping():
     bbc_scraping = multiprocessing.Process(target=scraper.scrape_bbc)
     yfinance_scraping = multiprocessing.Process(target=scraper.scrape_yfinance)
 
@@ -34,6 +34,5 @@ def main():
 
 if __name__ == "__main__":
 
-    schedule.every(1).hour.do(multithreading_functions)
-
+    schedule.every(1).hour.do(multithreading_scraping)
     main()

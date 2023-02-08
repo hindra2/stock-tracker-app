@@ -11,6 +11,7 @@ database_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "user_
 class Stock:
     def __init__(self, ticker):
         self.ticker = yf.Ticker(ticker)
+        self.ticker_str = ticker
     
     def getCurrentPrice(self):
         self.currentPrice = self.ticker.fast_info["last_price"]
@@ -29,17 +30,18 @@ class Stock:
         self.volume = self.ticker.fast_info['last_volume']
         return self.volume
 
-    def getHistory(self):
-        self.history = self.ticker.history(period='1y')
+    def getHistory(self, period):
+        self.history = self.ticker.history(period=period)
         return self.history
 
     def getName(self):
-        self.name = self.ticker.info["shortName"]
-        return self.name
+        return self.ticker_str
 
-    def plotHistory(self, type):
+    def plotHistory(self, type1, type2, period):
         graph = plt.figure()
-        plt.plot(self.history.index,self.history[type], marker=".", label=type)
+        self.getHistory(period)
+        plt.plot(self.history.index,self.history[type1], marker=".", label=type1)
+        plt.plot(self.history.index,self.history[type2], marker=".", label=type2)
         plt.ylabel("Price (USD)")
         plt.xlabel("Date (Year)")
         cursor(hover=True)

@@ -56,11 +56,33 @@ class SearchingPage(ctk.CTkFrame):
                                        font=("Arial", 15))
         self.type_label.grid(column=0, row=4, padx=10, pady=10, sticky="e")
 
-        self.plot_type = ctk.CTkOptionMenu(master=self.frame_right_up,
-                                           values=["Close", "Open", "High", "Low"],
+        self.type = "Close/Open"
+        self.plot_type = ctk.CTkSegmentedButton(master=self.frame_right_up,
+                                           values=["Close/Open", "High/Low"],
                                            font=("Arial", 15),
-                                           command=self.plot_history)
+                                           command=self.set_type)
         self.plot_type.grid(column=1, row=4, padx=10, pady=10)
+        self.plot_type.set("Close/Open")
+
+        self.period_label = ctk.CTkLabel(master=self.frame_right_up,
+                                       text="Time Period:",
+                                       font=("Arial", 15))
+        self.period_label.grid(column=0, row=5, padx=10, pady=10, sticky="e")
+
+        # self.period = ctk.StringVar(value="1d")
+        self.period = "1d"
+        self.plot_period = ctk.CTkSegmentedButton(master=self.frame_right_up,
+                                           values=["1d", "5d", "1mo", "6mo", "1y", "5y", "ytd"],
+                                           font=("Arial", 15),
+                                           command=self.set_period)
+        self.plot_period.grid(column=1, row=5, padx=10, pady=10)
+        self.plot_period.set("1d")
+
+        self.graph_button = ctk.CTkButton(master=self.frame_right_up,
+                                          text="Generate Graph",
+                                          font=("Arial", 15),
+                                          command=self.plot_history)
+        self.graph_button.grid(column=1, row=6, padx=10, pady=10)
 
         self.add = ctk.CTkImage(Image.open(os.path.join(ui_path, "plus.png")), size=(35, 35))
         self.add_button = ctk.CTkButton(master=self.frame_right_down,
@@ -143,23 +165,31 @@ class SearchingPage(ctk.CTkFrame):
         except TypeError:
             print("No Ticker Specified")
 
+    def set_period(self, period):
+        self.period = period
+    
+    def set_type(self, _type):
+        self.type = _type
+
     # Function that calls plotHistory from the instance of the Stock class in the variabke self.stock
-    def plot_history(self, type):
+    def plot_history(self):
         try:
             # Stores the graph from plotHistory into a variable and places the graph on a canvas
-            graph = self.stock.plotHistory(type)
+            if self.type == "Close/Open":
+                graph = self.stock.plotHistory("Close", "Open", self.period)
+            else:
+                graph = self.stock.plotHistory("High", "Low", self.period)
             canvas = FigureCanvasTkAgg(graph, master=self.frame_right_down)
             canvas.get_tk_widget().grid(row=0, column=0)
-
             # Implements the matplotlib toolbar below the graph
             toolbar_frame = ctk.CTkFrame(master=self.frame_right_down)
             toolbar_frame.grid(row=1, column=0)
             toolbar = NavigationToolbar2Tk(canvas, toolbar_frame)
             toolbar.update()
-        
+            
         # Error handling for when user doesn't type a ticker in the search bar
-        except AttributeError:
-            print("No Ticker Specified")
+        except AttributeError as e:
+            print(f"Error: {e}")
 
     # Function to implement window switching
     def onlift(self):
