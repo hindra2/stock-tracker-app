@@ -3,11 +3,12 @@ import homePage
 import scraper
 import schedule
 import multiprocessing
+from stock import InputStock
 
 # This is the file the user runs
 
 # In order to update the news display, some functions need to run in the background
-# Therefore, the multiprocessing library cajn be used to simultaneously run the main and sub functions
+# Therefore, the multiprocessing library cajn be used to simultaneously run both the main and sub functions
 def multithreading_scraping():
     bbc_scraping = multiprocessing.Process(target=scraper.scrape_bbc)
     yfinance_scraping = multiprocessing.Process(target=scraper.scrape_yfinance)
@@ -33,6 +34,7 @@ def main():
     app.mainloop()
 
 if __name__ == "__main__":
-
+    # Multiprocess both the news and stock updates
     schedule.every(1).hour.do(multithreading_scraping)
+    schedule.every(1).hour.do(InputStock.multithreading_stock)
     main()

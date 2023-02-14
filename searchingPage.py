@@ -28,70 +28,80 @@ class SearchingPage(ctk.CTkFrame):
         self.frame_right_down.rowconfigure(0, weight=1)
 
         # UI components
-        self.ticker_label = ctk.CTkLabel(master=self.frame_right_up,
-                                         text="Ticker:",
-                                         corner_radius=21,
-                                         font=("Arial", 15))
+        self.ticker_label = ctk.CTkLabel(
+                            master=self.frame_right_up,
+                            text="Ticker:",
+                            corner_radius=21,
+                            font=("Arial", 15))
         self.ticker_label.grid(column=0, row=1, padx=10, pady=10, sticky="we")
 
-        self.entry_ticker = ctk.CTkEntry(master=self.frame_right_up,
-                                         placeholder_text="Type Here...",
-                                         font=("Arial", 15))
+        self.entry_ticker = ctk.CTkEntry(
+                            master=self.frame_right_up,
+                            placeholder_text="Type Here...",
+                            font=("Arial", 15))
         self.entry_ticker.grid(column=1, row=1, padx=10, pady=10, sticky="we")
 
-        self.input_button = ctk.CTkButton(master=self.frame_right_up,
-                                          text="Input",
-                                          font=("Arial", 15),
-                                          command=self.print_input)
+        self.input_button = ctk.CTkButton(
+                            master=self.frame_right_up,
+                            text="Input",
+                            font=("Arial", 15),
+                            command=self.print_input)
         self.input_button.grid(column=2, row=1, padx=10, pady=10, sticky="we")
 
 
-        self.print_conclusion = ctk.CTkLabel(master=self.frame_right_up,
-                                             text="",
-                                             font=("Arial", 15))
+        self.print_conclusion = ctk.CTkLabel(
+                                master=self.frame_right_up,
+                                text="",
+                                font=("Arial", 15))
         self.print_conclusion.grid(column=1, row=3, sticky="we", padx=10, pady=10)
 
-        self.type_label = ctk.CTkLabel(master=self.frame_right_up,
-                                       text="Plot Type:",
-                                       font=("Arial", 15))
+        self.type_label = ctk.CTkLabel(
+                        master=self.frame_right_up,
+                        text="Plot Type:",
+                        font=("Arial", 15))
         self.type_label.grid(column=0, row=4, padx=10, pady=10, sticky="e")
 
         self.type = "Close/Open"
-        self.plot_type = ctk.CTkSegmentedButton(master=self.frame_right_up,
-                                           values=["Close/Open", "High/Low"],
-                                           font=("Arial", 15),
-                                           command=self.set_type)
+        self.plot_type = ctk.CTkSegmentedButton(
+                        master=self.frame_right_up,
+                        values=["Close/Open", "High/Low"],
+                        font=("Arial", 15),
+                        command=self.set_type)
         self.plot_type.grid(column=1, row=4, padx=10, pady=10)
         self.plot_type.set("Close/Open")
 
-        self.period_label = ctk.CTkLabel(master=self.frame_right_up,
-                                       text="Time Period:",
-                                       font=("Arial", 15))
+        self.period_label = ctk.CTkLabel(
+                            master=self.frame_right_up,
+                            text="Time Period:",
+                            font=("Arial", 15))
         self.period_label.grid(column=0, row=5, padx=10, pady=10, sticky="e")
 
         # self.period = ctk.StringVar(value="1d")
         self.period = "1d"
-        self.plot_period = ctk.CTkSegmentedButton(master=self.frame_right_up,
-                                           values=["1d", "5d", "1mo", "6mo", "1y", "5y", "ytd"],
-                                           font=("Arial", 15),
-                                           command=self.set_period)
+        self.plot_period = ctk.CTkSegmentedButton(
+                        master=self.frame_right_up,
+                        values=["1d", "5d", "1mo", "6mo", "1y", "5y", "ytd"],
+                        font=("Arial", 15),
+                        command=self.set_period)
         self.plot_period.grid(column=1, row=5, padx=10, pady=10)
         self.plot_period.set("1d")
 
-        self.graph_button = ctk.CTkButton(master=self.frame_right_up,
-                                          text="Generate Graph",
-                                          font=("Arial", 15),
-                                          command=self.plot_history)
+        self.graph_button = ctk.CTkButton(
+                            master=self.frame_right_up,
+                            text="Generate Graph",
+                            font=("Arial", 15),
+                            command=self.plot_history)
         self.graph_button.grid(column=1, row=6, padx=10, pady=10)
 
         self.add = ctk.CTkImage(Image.open(os.path.join(ui_path, "plus.png")), size=(35, 35))
-        self.add_button = ctk.CTkButton(master=self.frame_right_down,
-                                             text="",
-                                             image=self.add,
-                                             fg_color="transparent",
-                                             width=60,
-                                             hover_color=("gray70", "gray30"),
-                                             command=self.display_input_window)
+        self.add_button = ctk.CTkButton(
+                        master=self.frame_right_down,
+                        text="",
+                        image=self.add,
+                        fg_color="transparent",
+                        width=60,
+                        hover_color=("gray70", "gray30"),
+                        command=self.display_input_window)
         self.add_button.grid(row=4, column=2, padx=5, pady=5, sticky="s")
 
     # Funciton that creates a TopLevel window for the user to input information that they want to track
@@ -114,25 +124,12 @@ class SearchingPage(ctk.CTkFrame):
         self.bought_entry = ctk.CTkEntry(master=self.input_window, font=("Arial", 15))
         self.bought_entry.grid(column=1, row=1, sticky="we", pady=20, padx=50)
 
-
-        upper_bound_label = ctk.CTkLabel(master=self.input_window, text="Upper Bound:")
-        upper_bound_label.grid(column=0, row=2, sticky="e", pady=20)
-
-        self.upper_bound_entry= ctk.CTkEntry(master=self.input_window, font=("Arial", 15))
-        self.upper_bound_entry.grid(column=1, row=2, sticky="we", pady=20, padx=50)
-
-
-        lower_bound_label = ctk.CTkLabel(master=self.input_window, text="Lower Bound:")
-        lower_bound_label.grid(column=0, row=3, sticky="e", pady=20)
-
-        self.lower_bound_entry = ctk.CTkEntry(master=self.input_window, font=("Arial", 15))
-        self.lower_bound_entry.grid(column=1, row=3, sticky="we", pady=20, padx=50)
-
-        submit_button = ctk.CTkButton(master=self.input_window,
-                                    text="Submit",
-                                    corner_radius=21,
-                                    font=("Arial", 15),
-                                    command=self.input_data)
+        submit_button = ctk.CTkButton(
+                        master=self.input_window,
+                        text="Submit",
+                        corner_radius=21,
+                        font=("Arial", 15),
+                        command=self.input_data)
         submit_button.grid(column=0, row=4, columnspan=2, padx=50, pady=20, sticky="we")
 
     def input_data(self):
@@ -140,10 +137,8 @@ class SearchingPage(ctk.CTkFrame):
             ticker = self.entry_ticker.get()
             count = self.count_entry.get()
             bought_price = self.bought_entry.get()
-            upper_bound = self.upper_bound_entry.get()
-            lower_bound = self.lower_bound_entry.get()
 
-            self.userstock = InputStock(ticker, count, bought_price, upper_bound, lower_bound)
+            self.userstock = InputStock(ticker, count, bought_price)
             self.userstock.dump_data()
 
             self.input_window.destroy()
@@ -152,18 +147,13 @@ class SearchingPage(ctk.CTkFrame):
 
     # Function that creates an instance of the Stock class and prints the info on the label print_conclusion
     def print_input(self):
-        try:
-            ticker = self.entry_ticker.get()
-            self.stock = Stock(ticker)
-            opening_price = self.stock.getOpeningPrice()
-            price_range = self.stock.getPriceRange()
-            volume = self.stock.getVolume()
-            name = self.stock.getName()
-            self.print_conclusion.configure(text=f"Company Name: {name}\nOpening Price:  ${opening_price}\nPrice Range: ${price_range}\nVolume: {volume}")
-        
-        # Error handling for when no ticker is specified in the entry field and the "Input" button is pressed
-        except TypeError:
-            print("No Ticker Specified")
+        ticker = self.entry_ticker.get()
+        self.stock = Stock(ticker)
+        opening_price = self.stock.getOpeningPrice()
+        price_range = self.stock.getPriceRange()
+        volume = self.stock.getVolume()
+        name = self.stock.getName()
+        self.print_conclusion.configure(text=f"Company Name: {name}\nOpening Price:  ${opening_price}\nPrice Range: ${price_range}\nVolume: {volume}")
 
     def set_period(self, period):
         self.period = period

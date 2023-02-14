@@ -30,11 +30,12 @@ class LoginPage(ctk.CTk):
         self.validation_label = ctk.CTkLabel(master=self, text="", font=("Arial", 1))
         self.validation_label.grid(column=0, row=2, columnspan=2, padx=50, pady=5, sticky="we")
 
-        self.new_user_checkbox = ctk.CTkCheckBox(master=self, 
-                                                text="New User", 
-                                                font=("Arial", 15), 
-                                                onvalue="on", 
-                                                offvalue="off")
+        self.new_user_checkbox = ctk.CTkCheckBox(
+                                master=self, 
+                                text="New User", 
+                                font=("Arial", 15), 
+                                onvalue="on", 
+                                offvalue="off")
         self.new_user_checkbox.grid(column=0, row=3, columnspan=2, padx=50, pady=5, sticky="nswe")
 
         self.login_button = ctk.CTkButton(master=self,

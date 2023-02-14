@@ -22,7 +22,6 @@ class wishlistPage(ctk.CTkFrame):
         self.button.grid(row=2, column=1, sticky="nswe")
 
 
-    
     def load_data(self):
         row = 0
         data = InputStock.load_data()
@@ -35,20 +34,16 @@ class wishlistPage(ctk.CTkFrame):
                 self.card.columnconfigure((0, 1, 2), weight=1)
 
                 self.ticker_label = ctk.CTkLabel(self.card, text=ticker, font=("Arial", 15))
-                self.ticker_label.grid(row=0, column=0, padx=5, pady=5, sticky="w")
+                self.ticker_label.grid(row=0, column=0, padx=5, pady=5, sticky="we")
 
                 self.count_label = ctk.CTkLabel(self.card, text=content["Count"], font=("Arial", 15))
-                self.count_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+                self.count_label.grid(row=1, column=0, padx=5, pady=5, sticky="we")
 
                 self.boughtprice_label = ctk.CTkLabel(self.card, text=content["Bought Price"], font=("Arial", 15))
-                self.boughtprice_label.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+                self.boughtprice_label.grid(row=0, column=1, padx=5, pady=5, sticky="we")
 
-                self.upperbound_label = ctk.CTkLabel(self.card, text=content["Upper Bound"], font=("Arial", 15))
-                self.upperbound_label.grid(row=0, column=2, padx=5, pady=5, sticky="e")
-
-                self.lowerbound_label = ctk.CTkLabel(self.card, text=content["Lower Bound"], font=("Arial", 15))
-                self.lowerbound_label.grid(row=1, column=2, padx=5, pady=5, sticky="e")
-
+                self.gain_label = ctk.CTkLabel(self.card, text=content["Gain"], font=("Arial", 15))
+                self.gain_label.grid(row=0, column=2, padx=5, pady=5, sticky="we")
             row += 1
 
     def onlift(self):

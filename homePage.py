@@ -71,11 +71,12 @@ class HomePage(ctk.CTkFrame):
             title_bbc, link_bbc = headline
             news = scraper.News(title_bbc, link_bbc)
 
-            self.bbc_news_label = ctk.CTkButton(self.bbc_scroll_frame, 
-                                            text=news.return_headline(), 
-                                            fg_color="gray23",  
-                                            hover_color=("gray70", "gray30"), 
-                                            font=("Arial", 25),)
+            self.bbc_news_label = ctk.CTkButton(
+                                self.bbc_scroll_frame, 
+                                text=news.return_headline(), 
+                                fg_color="gray23",  
+                                hover_color=("gray70", "gray30"), 
+                                font=("Arial", 25))
             self.bbc_news_label.bind("<Button-1>", lambda event, link=news.return_url(): self.web(link))
             self.bbc_news_label.grid(row=i, pady=5, padx=5, sticky="we")
 
@@ -86,11 +87,12 @@ class HomePage(ctk.CTkFrame):
             title_yfinance, link_yfinance = headline
             news = scraper.News(title_yfinance, link_yfinance)
 
-            self.yfinance_news_label = ctk.CTkButton(self.yfinance_scroll_frame, 
-                                            text=news.return_headline(), 
-                                            fg_color="gray23",  
-                                            hover_color=("gray70", "gray30"), 
-                                            font=("Arial", 25))
+            self.yfinance_news_label = ctk.CTkButton(
+                                    self.yfinance_scroll_frame, 
+                                    text=news.return_headline(), 
+                                    fg_color="gray23",  
+                                    hover_color=("gray70", "gray30"), 
+                                    font=("Arial", 25))
             self.yfinance_news_label.bind("<Button-1>", lambda event, link=news.return_url(): self.web(link))
             self.yfinance_news_label.grid(row=i, pady=5, padx=5, sticky="we")
     
