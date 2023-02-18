@@ -33,6 +33,7 @@ def scrape_bbc():
     # Returns the first 5 elements of a list
     return headlines[:20]
 
+
 def scrape_yfinance():
     url = "https://finance.yahoo.com/news/"
     response = requests.get(url)

@@ -4,11 +4,13 @@ import login
 import mainPage
 
 # Login Window class
-class LoginPage(ctk.CTk):
-    def __init__(self):
+class LoginPage(ctk.CTkToplevel):
+    def __init__(self, master, callback):
         # To inherit properties of CTk parent class
         super().__init__()
-        self.title("Login Page")
+        self.master = master
+
+        self.callback = callback
 
         # Configuring Grid
         self.columnconfigure((0, 1), weight=1)
@@ -58,9 +60,9 @@ class LoginPage(ctk.CTk):
 
             # Checks if login info is valid
             if user.validate_login():
-                self.destroy()
-                app = mainPage.MainApp(user)
-                app.mainloop()
+                self.withdraw()
+                self.master.deiconify()
+                self.callback(user.get_username())
             else:
                 # Alerts user of wrong login info
                 self.validation_label.configure(text="Invalid Login Info!")

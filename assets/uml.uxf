@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>190</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Stock
+--
++ticker: yfinance object
++ticker_str: string
+--
+getCurrentPrice
+getOpeningPrice
+getPriceRange
+getVolume
+getHistory
+getName
+plotHistory
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>270</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;instanceOf&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>900</x>
+      <y>200</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>News
+--
++headline: string
++url: string
+--
+return_headline
+return_url</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1180</x>
+      <y>200</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>User
+--
++username: string
++password: string
+--
+get_username
+store_login
+validate_login</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>560</x>
+      <y>190</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>InputStock
+--
++count: int
++buy_price: int
+--
+dump_data
+calc_total_gain
+load_data</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

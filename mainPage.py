@@ -12,6 +12,9 @@ import homePage
 import learningPage
 import wishlistPage
 import loginPage
+import loginPage
+import time
+import threading
 
 # Specify image path relative to os
 ui_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets/icons")
@@ -26,12 +29,16 @@ class MainApp(ctk.CTk):
     WIDTH = 1280
     HEIGHT = 720
 
-    def __init__(self, user):
+    def __init__(self, news_queue, aqueue, stock_updated,):
         # To inherit properties of CTk parent class
         super().__init__()
+        #Multithreading
+        self.news_queue = news_queue
+        self.stock_updated = stock_updated
 
-        # Declares username
-        self.username = user.get_username()
+
+        self.asset_dict = aqueue.get()
+        self.add = self.asset_dict["add"]
 
         # General App Settings
         self.geometry(f"{MainApp.WIDTH}x{MainApp.HEIGHT}")
@@ -40,7 +47,7 @@ class MainApp(ctk.CTk):
 
         # 2x1 main grid
         self.columnconfigure(1, weight=1)
-        self.rowconfigure((0, 1), weight=1)
+        self.rowconfigure(0, weight=1)
 
         # Creates customtkinter frame for the navigation bar
         self.navigation_frame = ctk.CTkFrame(master=self, corner_radius=0, width=70)
@@ -55,30 +62,26 @@ class MainApp(ctk.CTk):
         self.navigation_frame_bottom.grid(row=1, column=0, pady=10, sticky="s")
 
         # Different pages for navigation bar to switch into
-        self.searching_page = searchingPage.SearchingPage(self)
-        self.searching_page.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
         self.learning_page = learningPage.learningPage(self)
         self.learning_page.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
-        self.wishlist_page = wishlistPage.wishlistPage(self)
+        self.wishlist_page = wishlistPage.wishlistPage(self, self.stock_updated)
         self.wishlist_page.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
-        self.home_page = homePage.HomePage(self)
+        self.searching_page = searchingPage.SearchingPage(self, self.add)
+        self.searching_page.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
+        self.home_page = homePage.HomePage(self, self.news_queue)
         self.home_page.grid(row=0, column=1, padx=5, pady=5, sticky="nswe")
+        self.login_page = loginPage.LoginPage(self, self.set_username)
 
         # Page the app starts with - homePage
         self.home_page.callback = self.searching_page.onlift
 
         # Toolbar
         # Images for Toolbar Buttons
-        self.home = ctk.CTkImage(Image.open(os.path.join(ui_path, "home.png")), size=(35, 35))
-        self.globe = ctk.CTkImage(Image.open(os.path.join(ui_path, "search.png")), size=(35, 35))
-        self.list = ctk.CTkImage(Image.open(os.path.join(ui_path, "bookmark.png")), size=(35, 35))
-        self.learn = ctk.CTkImage(Image.open(os.path.join(ui_path, "learning.png")), size=(35, 35))
-        self.logout = ctk.CTkImage(Image.open(os.path.join(ui_path, "logout.png")), size=(35, 35))
 
         # Navigation UI Layouting
         self.home_button = ctk.CTkButton(master=self.navigation_frame_top,
                                          text="",
-                                         image=self.home,
+                                         image=ctk.CTkImage(Image.open(self.asset_dict["home"]), size=(35, 35)),
                                          width=60,
                                          hover_color=("gray70", "gray30"),
                                          fg_color="transparent",
@@ -87,7 +90,7 @@ class MainApp(ctk.CTk):
 
         self.globe_button = ctk.CTkButton(master=self.navigation_frame_top,
                                           text="",
-                                          image=self.globe,
+                                          image=ctk.CTkImage(Image.open(self.asset_dict["search"]), size=(35, 35)),
                                           fg_color="transparent",
                                           width=60,
                                           hover_color=("gray70", "gray30"),
@@ -97,7 +100,7 @@ class MainApp(ctk.CTk):
 
         self.list_button = ctk.CTkButton(master=self.navigation_frame_top,
                                           text="",
-                                          image=self.list,
+                                          image=ctk.CTkImage(Image.open(self.asset_dict["bookmark"]), size=(35, 35)),
                                           fg_color="transparent",
                                           width=60,
                                           hover_color=("gray70", "gray30"),
@@ -106,7 +109,7 @@ class MainApp(ctk.CTk):
 
         self.learn_button = ctk.CTkButton(master=self.navigation_frame_top,
                                           text="",
-                                          image=self.learn,
+                                          image=ctk.CTkImage(Image.open(self.asset_dict["learning"]), size=(35, 35)),
                                           fg_color="transparent",
                                           width=60,
                                           hover_color=("gray70", "gray30"),
@@ -115,21 +118,23 @@ class MainApp(ctk.CTk):
 
         self.logout_button = ctk.CTkButton(master=self.navigation_frame_bottom,
                                              text="",
-                                             image=self.logout,
+                                             image=ctk.CTkImage(Image.open(self.asset_dict["logout"]), size=(35, 35)),
                                              fg_color="transparent",
                                              width=60,
                                              hover_color=("gray70", "gray30"),
                                              command=self.logout_func)
         self.logout_button.grid(row=0, column=0, padx=5, pady=5, sticky="s")
-        # Tooltip to show logged in user when hovering cursor over logout button
-        ToolTip(self.logout_button, msg=f"Logged in as: {self.username}", delay=0, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
 
-    # Logout function destroys the main window and opens the login window
-    def logout_func(self):
-        self.destroy()
-        app = loginPage.LoginPage()
-        app.mainloop()
+    def set_username(self, user):
+        self.username = user
+        print(user)
+        ToolTip(self.logout_button, msg=f"Logged in as: {self.username}", delay=0, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
+        self.update()
 
     # Handling for closing the app
     def on_closing(self, event=0):
         self.quit()
+        
+    def logout_func(self):
+        self.withdraw()
+        self.login_page.deiconify()

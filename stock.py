@@ -55,46 +55,10 @@ class InputStock(Stock):
         super().__init__(ticker_str)
         self.count = int(count)
         self.buy_price = int(buy_price)
-
-    def calc_total_cost(self, count, buy_price):
-        return count*buy_price
-
-    def calc_total_gain(self, count, buy_price):
-        super().getCurrentPrice()
-        curr_total = self.getCurrentPrice()*count
-        total = self.calc_total_cost(count, buy_price)
-        print(f"asdasd {(curr_total - total)/curr_total}")
-
-        return round((curr_total - total)/curr_total, 2)
-    
-    # Function to update stock
-    @classmethod
-    def multithreading_stock():
-        data_list = []
-
-        with open("user_stock", "rb") as f:
-            try:
-                while True:
-                    data = pickle.load(f)
-                    data_list.append(data)
-            except EOFError:
-                print("Done loading data")
-        f.close()
-
-        for dict_ in data_list:
-            cost = self.calc_total_cost(dict_["Count"], dict_["Bought Price"])
-            gain = self.calc_total_gain(dict_["Count"], dict_["Bought Price"])
-            dict_["Cost"] = cost
-            dict_["Gain"] = gain
-        
-        with open("user_stock", "wb") as f:
-            pickle.dump(data, f)
-        f.close()
-
     
     def dump_data(self):
         try:
-            cost = self.calc_total_cost(self.count, self.buy_price)
+            cost =self.count*self.buy_price
             gain = self.calc_total_gain(self.count, self.buy_price) 
             data = {
                 self.ticker_str: {
@@ -105,32 +69,38 @@ class InputStock(Stock):
                 }
             }
 
-            database = open("user_stock", "wb")
-            pickle.dump(data, database)
-            database.close()
+            with open("user_stock", "ab") as f:
+                pickle.dump(data, f)
+            f.close()
         except TypeError as e:
             print(e)
-    
+
+    def calc_total_gain(self, count, buy_price):
+        super().getCurrentPrice()
+        curr_total = self.getCurrentPrice()*count
+        total = count*buy_price
+        print(f"asdasd {(curr_total - total)/curr_total}")
+
+        return round((curr_total - total)/curr_total, 2)
+
     @classmethod
     def load_data(cls):
         try:
             data_list = []
 
             with open("user_stock", "rb") as f:
+                while True:
                     try:
-                        while True:
-                            data = pickle.load(f)
-                            data_list.append(data)
+                        data = pickle.load(f)
                     except EOFError:
-                        print("Done loading data")
+                        break
+                    data_list.append(data)
             
+            pass
             return data_list
 
         except (FileNotFoundError, pickle.UnpicklingError) as e:
             print(f"Error loading data: {e}")
-                
-        except EOFError:
-            print("No data in database or corrupted data")
         
         finally:
             f.close()

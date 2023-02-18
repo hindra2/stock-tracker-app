@@ -10,8 +10,9 @@ ui_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets/icon
 
 # Searching page class
 class SearchingPage(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, add):
         super().__init__(master)
+        self.add = Image.open(add)
         # 1x2 right grid
         self.columnconfigure(0, weight=1)
         self.rowconfigure((0,1), weight=1)
@@ -93,11 +94,10 @@ class SearchingPage(ctk.CTkFrame):
                             command=self.plot_history)
         self.graph_button.grid(column=1, row=6, padx=10, pady=10)
 
-        self.add = ctk.CTkImage(Image.open(os.path.join(ui_path, "plus.png")), size=(35, 35))
         self.add_button = ctk.CTkButton(
                         master=self.frame_right_down,
                         text="",
-                        image=self.add,
+                        image=ctk.CTkImage(self.add, size=(35, 35)),
                         fg_color="transparent",
                         width=60,
                         hover_color=("gray70", "gray30"),
